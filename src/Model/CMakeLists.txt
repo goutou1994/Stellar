@@ -1,0 +1,1 @@
+add_library(model Mesh.cpp Model.cpp)
