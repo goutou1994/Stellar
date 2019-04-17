@@ -29,7 +29,7 @@ public:
     std::vector<BaseAnimator<float>*> animators;
     std::map<std::string, BaseAnimator<float>*> animator_map;
     BaseCamera* camera;
-    int skybox = -1;
+    int skybox[3] = {-1, -1, -1};
 
     struct shadow_map{
         Light* light;
@@ -41,6 +41,7 @@ public:
     float origin_time = 0, last_time, current_time;
 
     void addShadow(Light*);
+    void addSkybox(unsigned int skybox);
     void drawGroups(Shader* shader) {
         this->group_root->draw(shader, this->current_time);
     }

@@ -9,7 +9,7 @@
 
 class Light {
 public:
-    Light(float r, float g, float b, float I) : color(r, g, b), I(I) {}
+    Light(const glm::vec3 &color, float I) : color(color), I(I) {}
     glm::vec3 color;
     float I;
     virtual int getLightType() = 0;
@@ -17,7 +17,7 @@ public:
 
 class PointLight : public Light {
 public:
-    PointLight(float r, float g, float b, float I, float x, float y, float z) : Light(r, g, b, I), pos(x, y, z) {}
+    PointLight(const glm::vec3 &color, float I, const glm::vec3 &pos) : Light(color, I), pos(pos) {}
     glm::vec3 pos;
     int getLightType() {
         return 0;
@@ -26,9 +26,32 @@ public:
 
 class Ambient : public Light {
 public:
-    Ambient(float r, float g, float b, float I) : Light(r, g, b, I) {}
+    Ambient(const glm::vec3 &color, float I) : Light(color, I) {}
     int getLightType() {
         return 3;
     }
 };
+
+class Directional: public Light {
+public:
+    Directional(const glm::vec3 &color, float I, const glm::vec3 &dir) : Light(color, I), dir(dir) {}
+    glm::vec3 dir;
+    int getLightType() {
+        return 1;
+    }
+};
+
+class SpotLight: public Light {
+public:
+    SpotLight(const glm::vec3 &color, float I, const glm::vec3 &pos, const glm::vec3 &dir, float fov)
+            : Light(color, I), pos(pos), dir(dir) {
+        this->fov = glm::radians(fov);
+    }
+    glm::vec3 pos, dir;
+    float fov;
+    int getLightType() {
+        return 2;
+    }
+};
+
 #endif //STELLAR_LIGHT_H

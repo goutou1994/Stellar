@@ -12,7 +12,7 @@
 GLuint loadTextureFromFile(std::string path);
 GLuint loadCubeTextureFromFile(std::string path);
 
-Scene loadSceneFromFile(std::string path);
+Scene* loadSceneFromFile(std::string path, Scene* scene = nullptr);
 
 void bindTexture(std::string path, GLenum target = GL_TEXTURE_2D);
 

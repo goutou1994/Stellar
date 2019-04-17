@@ -16,7 +16,7 @@
 class Group {
 public:
     virtual bool is_model() = 0;
-    virtual void draw(Shader* shader, float time = .0f, glm::mat4 parent_trans = glm::mat4(1.0f)) = 0;
+    virtual void draw(Shader* shader, float time = .0f, glm::mat4 parent_trans = glm::mat4(1.0f), glm::mat4 parent_linear_trans = glm::mat4(1.0f)) = 0;
     Transform transform;
     Group* parent = nullptr;
     virtual ~Group() {}
@@ -30,7 +30,7 @@ public:
     std::set<Group*> children;
     void removeChild(Group*);
     void appendChild(Group*);
-    void draw(Shader* shader, float time = .0f, glm::mat4 parent_trans = glm::mat4(1.0f));
+    void draw(Shader* shader, float time = .0f, glm::mat4 parent_trans = glm::mat4(1.0f), glm::mat4 parent_linear_trans = glm::mat4(1.0f));
 };
 
 class ModelNode : public Group {
@@ -44,7 +44,7 @@ public:
     Model* model;
     unsigned int textures[8];
     Material *mtl;
-    void draw(Shader* shader, float time = .0f, glm::mat4 parent_trans = glm::mat4(1.0f));
+    void draw(Shader* shader, float time = .0f, glm::mat4 parent_trans = glm::mat4(1.0f), glm::mat4 parent_linear_trans = glm::mat4(1.0f));
     ~ModelNode() {
         delete model;
     }

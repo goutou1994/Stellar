@@ -15,52 +15,44 @@
 class Transform {
 public:
     Transform() {
-        refresh = true;
+//        refresh = true;
+        this->trans = glm::mat4(1.f);
+        this->linear_trans = glm::mat4(1.f);
     }
-    void setScale(glm::vec3 &&scale) {
-        this->scale = scale;
-        refresh = true;
+    void scale(glm::vec3 &&scale) {
+        this->trans = glm::scale(this->trans, scale);
+        this->linear_trans = glm::scale(this->trans, scale);
     }
-    void setScale(float scale) {
-        this->scale = glm::vec3(scale);
-        refresh = true;
+    void scale(float s) {
+        this->scale(glm::vec3(s));
     }
-    void setRotation(glm::vec3 &&rotation) {
-        this->rotation = rotation;
-        refresh = true;
+    void rotate(glm::vec3 &&rotation) {
+        this->trans = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z)) * trans;
+        this->linear_trans = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z)) * linear_trans;
     }
-    void setPos(glm::vec3 &&pos) {
-        this->pos = pos;
-        refresh = true;
+    void translate(glm::vec3 &&translate) {
+        this->trans = glm::translate(this->trans, translate);
     }
-    void setPosX(BaseAnimator<float> *a) {
-        this->aPos[0] = a;
-    }
-    void setAnchor(glm::vec3 &&anchor) {
-        this->anchor = anchor;
-        refresh = true;
-    }
+
     glm::mat4 getTransMat(float time = .0f) {
-        glm::vec3 rPos = pos;
-        for (int i = 0; i < 3; i++) {
-            if (aPos[i] != nullptr) {
-                rPos[i] = dynamic_cast<CubicBezierAnimator<float>*>(aPos[i])->at(time);
-            }
-        }
-        trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, -anchor);
-        trans = glm::scale(trans, scale);
-        trans = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z)) * trans;
-        trans = glm::translate(trans, rPos);
-        refresh = false;
-        return trans;
+//        glm::vec3 rPos = pos;
+//        for (int i = 0; i < 3; i++) {
+//            if (aPos[i] != nullptr) {
+//                rPos[i] = dynamic_cast<CubicBezierAnimator<float>*>(aPos[i])->at(time);
+//            }
+//        }
+        return this->trans;
+    }
+    glm::mat4 getLinearTransMat(float time = .0f) {
+        return this->linear_trans;
     }
 private:
-    glm::vec3 scale{1.0f}, rotation{0}, pos{0}, anchor{0};
-    BaseAnimator<float>* aPos[3]{nullptr, nullptr, nullptr};
+//    glm::vec3 scale{1.0f}, rotation{0}, pos{0}, anchor{0};
+//    BaseAnimator<float>* aPos[3]{nullptr, nullptr, nullptr};
     glm::mat4 trans;
+    glm::mat4 linear_trans;
 
-    bool refresh;
+//    bool refresh;
 };
 
 #endif //STELLAR_TRANSFORM_H

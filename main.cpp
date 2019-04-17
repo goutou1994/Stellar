@@ -12,7 +12,7 @@
 #include "Camera.h"
 #include "loaders.h"
 
-const int SCR_WIDTH = 500, SCR_HEIGHT = 300;
+const int SCR_WIDTH = 1000, SCR_HEIGHT = 600;
 
 int main() {
 
@@ -43,7 +43,8 @@ int main() {
 
     //-----------------------------end----------------------------
 
-    Scene scene = loadSceneFromFile("test_scene.txt");
+    global_shaders::init();
+    Scene &scene = *loadSceneFromFile("dark_scene");
     CubicBezierAnimator<float>* animator = new CubicBezierAnimator<float>();
 //    scene.groups[0]->transform.setPosX(animator);
     animator->addKeyFrame(0, 0);
@@ -54,20 +55,16 @@ int main() {
 
 //    LookAtCamera camera(90.0f, 1.0f, glm::vec3(0, 0, 50.f), glm::vec3(0, 0, 0));
     CenteredSphereCamera camera;
-    camera.radius = 50.0f;
+    camera.radius = 10.0f;
     camera.aspectRatio = (float)SCR_WIDTH / SCR_HEIGHT;
     CameraControl camera_control(window, camera);
     camera_control.start();
     scene.camera = &camera;
 
-    global_shaders::init();
-
     glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
-    GLint num;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &num);
-    std::cout << num << std::endl;
+    std::cout << sizeof(glm::vec3) << std::endl;
 
     while(!glfwWindowShouldClose(window))
     {

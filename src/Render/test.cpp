@@ -28,26 +28,32 @@ void TestShader::scene_phase(Scene *scene) {
         break;
     }
 
-    int point_light_num = 0;
+    int light_count = 0;
     for (Light* light : scene->lights) {
         if (light == shadow_light) {
-            this->setInt("shadowIndex", point_light_num);
+            this->setInt("shadowIndex", light_count);
         }
+        std::string path = "lights[" + std::to_string(light_count) + "].";
+        this->setInt(path + "type", light->getLightType());
+        this->setVec3(path + "color", light->color);
+        this->setFloat(path + "I", light->I);
         if (light->getLightType() == 0) {
-            std::string path = "point_lights[" + std::to_string(point_light_num) + "].";
-            this->setVec3(path + "pos", ((PointLight*)light)->pos);
-            this->setVec3(path + "color", light->color);
-            this->setFloat(path + "I", light->I);
-            point_light_num++;
-        } else if (light->getLightType() == 3) {
-            this->setVec3("ambient.color", light->color);
-            this->setFloat("ambient.I", light->I);
+            this->setVec3(path + "pos", dynamic_cast<PointLight*>(light)->pos);
         }
+        if (light->getLightType() == 1) {
+            this->setVec3(path + "dir", dynamic_cast<Directional*>(light)->dir);
+        }
+        if (light->getLightType() == 2) {
+            this->setVec3(path + "dir", glm::normalize(dynamic_cast<SpotLight*>(light)->dir - dynamic_cast<SpotLight*>(light)->pos));
+            this->setVec3(path + "pos", dynamic_cast<SpotLight*>(light)->pos);
+            this->setFloat(path + "fov", dynamic_cast<SpotLight*>(light)->fov);
+        }
+        light_count++;
     }
-    this->setInt("point_light_num", point_light_num);
+    this->setInt("light_count", light_count);
     // end
 
-    glViewport(0, 0, 500 * 2, 300 * 2);
+    glViewport(0, 0, 1000 * 2, 600 * 2);
     glClear(GL_DEPTH_BUFFER_BIT);
 
     scene->drawGroups(this);

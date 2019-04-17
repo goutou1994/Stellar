@@ -59,10 +59,10 @@ void SkyboxShader::init() {
 }
 
 void SkyboxShader::scene_phase(Scene *scene) {
-    if (scene->skybox < 0) return;
+    if (scene->skybox[0] < 0) return;
     this->use();
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, scene->skybox);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, scene->skybox[0]);
     this->setInt("skybox", 0);
     this->setMat4("trans", scene->camera->getTransMat_NoTranslate());
     glBindVertexArray(this->VAO);

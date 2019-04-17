@@ -16,22 +16,25 @@ void GroupNode::removeChild(Group *child) {
     }
 }
 
-void GroupNode::draw(Shader* shader, float time, glm::mat4 parent_trans) {
+void GroupNode::draw(Shader* shader, float time, glm::mat4 parent_trans, glm::mat4 parent_linear_trans) {
     glm::mat4 group_trans = parent_trans * this->transform.getTransMat(time);
+    glm::mat4 group_linear_trans = parent_linear_trans * this->transform.getLinearTransMat(time);
     for (Group *child : this->children) {
-        child->draw(shader, time, group_trans);
+        child->draw(shader, time, group_trans, group_linear_trans);
     }
 }
 
-void ModelNode::draw(Shader* shader, float time, glm::mat4 parent_trans) {
+void ModelNode::draw(Shader* shader, float time, glm::mat4 parent_trans, glm::mat4 parent_linear_trans) {
     shader->use();
     glm::mat4 model_trans = this->transform.getTransMat();
     shader->setMat4("model_trans", parent_trans * this->transform.getTransMat(time));
+    glm::mat4 model_linear_trans = parent_linear_trans * this->transform.getLinearTransMat(time);
+    shader->setMat4("model_normal_trans", glm::transpose(glm::inverse(model_linear_trans)));
 
     int active_textures = 0;
     for (int i = 0; i < 8; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
-        if (mtl->getType(i) == Material::TEXTURE) {
+        if (mtl->getType(i) != Material::VOID) {
             active_textures |= 1 << i;
             glBindTexture(GL_TEXTURE_2D, mtl->tex(i));
         } else {

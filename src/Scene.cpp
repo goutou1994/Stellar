@@ -79,6 +79,11 @@ void Scene::addShadow(Light *light) {
     }
 }
 
+void Scene::addSkybox(unsigned int skybox) {
+    this->skybox[0] = skybox;
+    this->skybox[1] = dynamic_cast<DiffuseIBLMapShader*>(global_shaders::diffuse_ibl_map_shader)->convert(skybox, 128);
+    this->skybox[2] = dynamic_cast<SpecIBLMapShader*>(global_shaders::spec_ibl_map_shader)->convert(skybox, 128);
+}
 
 
 void Scene::draw() {
@@ -89,6 +94,5 @@ void Scene::draw() {
 //    global_shaders::point_light_shadow_shader->scene_phase(this);
     global_shaders::pbr_shader->scene_phase(this);
 //    dynamic_cast<CubeTexDebugShader*>(global_shaders::cube_tex_debug_shader)->debug(this->skybox, 0);
-//    ((CubeTexDebugShader*)Shaders::getCubeTexDebugShader())->test(5);
-//    ((DebugShader*)Shaders::getDebugShader())->debug(this->textures[0]);
+//    dynamic_cast<DebugShader*>(global_shaders::debug_shader)->debug(this->tex_map.at("metal_normal"));
 }

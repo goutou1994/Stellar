@@ -9,7 +9,7 @@
 void Model::loadModel(std::string path)
 {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
     if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -57,6 +57,11 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
             .TexCoord = {
                 mesh->mTextureCoords[0] ? mesh->mTextureCoords[0][i].x : 0,
                 mesh->mTextureCoords[0] ? mesh->mTextureCoords[0][i].y : 0
+            },
+            .Tangent = {
+                mesh->mTangents[i].x,
+                mesh->mTangents[i].y,
+                mesh->mTangents[i].z
             }
         });
     }

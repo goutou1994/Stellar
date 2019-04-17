@@ -2,29 +2,37 @@
 
 Mesh::Mesh(std::vector<Vertex>&& vertices, std::vector<GLuint>&& indices, std::vector<Texture>&& textures)
     : vertices(vertices), indices(indices), textures(textures) {
-    calcTangent();
     setupMesh();
 }
 
 #define u(i) v[i]->TexCoord.x
+#define v(i) v[i]->TexCoord.y
 #define p(i) v[i]->Position
 void Mesh::calcTangent() {
+    std::vector<int> count(vertices.size());
     for (auto p = indices.cbegin(); p < indices.cend(); p += 3) {
         std::vector<Vertex>::iterator v[3] = {
                 vertices.begin() + *p,
                 vertices.begin() + *(p + 1),
                 vertices.begin() + *(p + 2)
         };
-        float t = (u(0) - u(1)) / (u(2) - u(1));
-        glm::vec3 tangent = -glm::normalize(p(1) + t * (p(2) - p(1)) - p(0));
+        glm::vec3 tangent = glm::normalize((p(0) - p(1)) * (u(1) - u(2)) + (p(2) - p(1)) * (u(0) - u(1)));
+//        if ((u(1) - u(2)) * (v(0) - v(1)) + (u(0) - u(1)) * (v(2) - v(1)) < 0) {
+//            tangent = -tangent;
+//        }
 
         // TODO temporary
-        v[0]->Tangent = tangent;
-        v[1]->Tangent = tangent;
-        v[2]->Tangent = tangent;
+        v[0]->Tangent += tangent;
+        v[1]->Tangent += tangent;
+        v[2]->Tangent += tangent;
+        count[*p]++;count[*(p + 1)]++;count[*(p + 2)]++;
+    }
+    for (int i = 0; i < vertices.size(); i++) {
+        vertices[i].Tangent /= count[i];
     }
 }
 #undef u
+#undef v
 #undef p
 
 void Mesh::setupMesh() {
