@@ -43,11 +43,11 @@ public:
 
 class SpotLight: public Light {
 public:
-    SpotLight(const glm::vec3 &color, float I, const glm::vec3 &pos, const glm::vec3 &dir, float fov)
-            : Light(color, I), pos(pos), dir(dir) {
+    SpotLight(const glm::vec3 &color, float I, const glm::vec3 &pos, const glm::vec3 &lookat, float fov)
+            : Light(color, I), pos(pos), lookat(lookat) {
         this->fov = glm::radians(fov);
     }
-    glm::vec3 pos, dir;
+    glm::vec3 pos, lookat;
     float fov;
     int getLightType() {
         return 2;

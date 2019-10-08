@@ -24,7 +24,12 @@ void TestShader::scene_phase(Scene *scene) {
     for (Scene::shadow_map &shadow : scene->shadows) {
         shadow_light = shadow.light;
         glActiveTexture(GL_TEXTURE8);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, shadow.tex);
+        if (shadow_light->getLightType() == 0) {
+//            glBindTexture(GL_TEXTURE_CUBE_MAP, shadow.tex);
+        } else if (shadow_light->getLightType() == 2) {
+            glBindTexture(GL_TEXTURE_2D, shadow.tex);
+            this->setMat4("shadow_trans", shadow.trans[0]);
+        }
         break;
     }
 
@@ -44,7 +49,7 @@ void TestShader::scene_phase(Scene *scene) {
             this->setVec3(path + "dir", dynamic_cast<Directional*>(light)->dir);
         }
         if (light->getLightType() == 2) {
-            this->setVec3(path + "dir", glm::normalize(dynamic_cast<SpotLight*>(light)->dir - dynamic_cast<SpotLight*>(light)->pos));
+            this->setVec3(path + "dir", glm::normalize(dynamic_cast<SpotLight*>(light)->lookat - dynamic_cast<SpotLight*>(light)->pos));
             this->setVec3(path + "pos", dynamic_cast<SpotLight*>(light)->pos);
             this->setFloat(path + "fov", dynamic_cast<SpotLight*>(light)->fov);
         }

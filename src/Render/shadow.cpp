@@ -26,3 +26,27 @@ void PointLightShadowShader::scene_phase(Scene *scene) {
         }
     }
 }
+
+void SpotLightShadowShader::init() {
+    this->use();
+    this->setFloat("far_plane", 200.f);
+}
+
+void SpotLightShadowShader::scene_phase(Scene *scene) {
+    this->use();
+    for (Scene::shadow_map &shadow : scene->shadows) {
+        Light* light = shadow.light;
+        GLuint fbo = shadow.fbo;
+        if (light->getLightType() == 2) {
+            this->setMat4("trans", shadow.trans[0]);
+            this->setVec3("light_pos", ((SpotLight*)light)->pos);
+            glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glClearDepth(1);
+            glClear(GL_DEPTH_BUFFER_BIT);
+
+            scene->drawGroups(this);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+    }
+}

@@ -20,8 +20,8 @@ public:
         this->linear_trans = glm::mat4(1.f);
     }
     void scale(glm::vec3 &&scale) {
-        this->trans = glm::scale(this->trans, scale);
-        this->linear_trans = glm::scale(this->trans, scale);
+        this->trans = glm::scale(glm::mat4(1.f), scale) * trans;
+        this->linear_trans = glm::scale(glm::mat4(1.f), scale) * linear_trans;
     }
     void scale(float s) {
         this->scale(glm::vec3(s));
@@ -31,7 +31,7 @@ public:
         this->linear_trans = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z)) * linear_trans;
     }
     void translate(glm::vec3 &&translate) {
-        this->trans = glm::translate(this->trans, translate);
+        this->trans = glm::translate(glm::mat4(1.f), translate) * this->trans;
     }
 
     glm::mat4 getTransMat(float time = .0f) {

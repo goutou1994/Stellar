@@ -58,11 +58,18 @@ GLuint loadTextureFromFile(std::string path) {
     unsigned char* textureData = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 
     if (textureData) {
+        GLenum format = GL_RGB;
+
         if (nrChannels == 4) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-        } else {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+            format = GL_RGBA;
+        } else if (nrChannels == 3) {
+            format = GL_RGB;
+        } else if (nrChannels == 2) {
+            format = GL_RG;
+        } else if (nrChannels == 1) {
+            format = GL_RED;
         }
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, textureData);
         stbi_image_free(textureData);
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

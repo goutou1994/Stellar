@@ -3,6 +3,7 @@
 namespace global_shaders {
     Shader *normal_shader;
     Shader *point_light_shadow_shader;
+    Shader *spot_light_shadow_shader;
     Shader *debug_shader;
     Shader *cube_tex_debug_shader;
     Shader *pbr_shader;
@@ -23,6 +24,8 @@ void global_shaders::init() {
             "shaders/shadow/point_light_f.glsl",
             "shaders/shadow/point_light_g.glsl"
     );
+    spot_light_shadow_shader = new SpotLightShadowShader("shaders/shadow/spot_light_v.glsl",
+                                                          "shaders/shadow/point_light_f.glsl");
     debug_shader = new DebugShader("shaders/debug/v.glsl", "shaders/debug/f.glsl", "shaders/debug/g.glsl");
     cube_tex_debug_shader = new CubeTexDebugShader("shaders/cube-tex-debug/v.glsl", "shaders/cube-tex-debug/f.glsl",
                                                    "shaders/cube-tex-debug/g.glsl");

@@ -10,6 +10,7 @@
 namespace global_shaders {
     extern Shader *normal_shader;
     extern Shader *point_light_shadow_shader;
+    extern Shader *spot_light_shadow_shader;
     extern Shader *debug_shader;
     extern Shader *cube_tex_debug_shader;
     extern Shader *pbr_shader;
@@ -32,6 +33,16 @@ public:
 class PointLightShadowShader : public Shader {
 public:
     PointLightShadowShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
+            : Shader(vertexPath, fragmentPath, geometryPath) {
+        init();
+    }
+    void init();
+    void scene_phase(Scene*);
+};
+
+class SpotLightShadowShader : public Shader {
+public:
+    SpotLightShadowShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
             : Shader(vertexPath, fragmentPath, geometryPath) {
         init();
     }

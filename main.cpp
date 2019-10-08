@@ -15,7 +15,6 @@
 const int SCR_WIDTH = 1000, SCR_HEIGHT = 600;
 
 int main() {
-
     //----------------------init window-----------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -24,7 +23,18 @@ int main() {
     glfwWindowHint(GLFW_SAMPLES, 4);
 
 #ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT
+}
+
+glfwMakeContextCurrent(window);
+
+if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+std::cout << "Failed to initialize GLAD" << std::endl;
+return -1;
+}
+
+//-----------------------------end----------------------------
+, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
     GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "shadow", nullptr, nullptr);
     if (window == nullptr)
@@ -32,19 +42,8 @@ int main() {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
-    }
-
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-    //-----------------------------end----------------------------
-
     global_shaders::init();
-    Scene &scene = *loadSceneFromFile("dark_scene");
+    Scene &scene = *loadSceneFromFile("test_scene.txt");
     CubicBezierAnimator<float>* animator = new CubicBezierAnimator<float>();
 //    scene.groups[0]->transform.setPosX(animator);
     animator->addKeyFrame(0, 0);
@@ -63,8 +62,6 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-
-    std::cout << sizeof(glm::vec3) << std::endl;
 
     while(!glfwWindowShouldClose(window))
     {

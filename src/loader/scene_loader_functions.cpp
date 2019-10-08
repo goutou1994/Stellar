@@ -242,6 +242,12 @@ void scene_loader_functions::normal_tex(Scene &scene, vector<string> &v) {
     mtl->insertTex(2, tex);
 }
 
+void scene_loader_functions::height_map(Scene &scene, vector<string> &v) {
+    Material *mtl = getMaterial(scene, v[1]);
+    unsigned int tex = getTex(scene, v[2]);
+    mtl->insertTex(4, tex);
+}
+
 void scene_loader_functions::animation(Scene &scene, vector<string> &v) {
 
 }

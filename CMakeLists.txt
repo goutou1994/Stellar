@@ -24,6 +24,12 @@ message(${CMAKE_BINARY_DIR})
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_glu_LIBRARY} libglfw3.a ${Cocoa_LIB} ${IOKit_LIB} ${CoreVideo_LIB} libassimp.4.dylib)
 
-#ADD_CUSTOM_COMMAND(OUTPUT shaders COMMAND cp -rf ${CMAKE_SOURCE_DIR}/src/shaders ${CMAKE_BINARY_DIR})
-file(REMOVE_RECURSE ${CMAKE_BINARY_DIR}/shaders)
-file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_BINARY_DIR})
+add_custom_target(
+        SHADERS
+        COMMAND rm -rf ${CMAKE_BINARY_DIR}/shaders
+        COMMAND cp -rf ${CMAKE_SOURCE_DIR}/src/shaders ${CMAKE_BINARY_DIR}
+)
+add_dependencies(Stellar SHADERS)
+
+#file(REMOVE_RECURSE ${CMAKE_BINARY_DIR}/shaders)
+#file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_BINARY_DIR})

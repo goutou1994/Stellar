@@ -44,6 +44,7 @@ namespace scene_loader_functions {
     void roughness_color(Scene&, vector<string>&);
     void ambient(Scene&, vector<string>&);
     void normal_tex(Scene&, vector<string>&);
+    void height_map(Scene&, vector<string>&);
     void animation(Scene&, vector<string>&);
     void kf(Scene&, vector<string>&);
     void kf_full(Scene&, vector<string>&);
@@ -77,7 +78,8 @@ namespace scene_loader_functions {
             {{"rough", 3}, roughness},
             {{"rough", 5}, roughness_color},
             {{"ambient", 3}, ambient},
-            {{"normal_tex", 3}, normal_tex},
+            {{"normal_map", 3}, normal_tex},
+            {{"height_map", 3}, height_map},
             {{"animation", 2}, animation},
             {{"kf", 4}, kf},
             {{"kf_full", 8}, kf_full},
